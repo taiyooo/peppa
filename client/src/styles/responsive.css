@@ -1,0 +1,171 @@
+/* Media queries per dispositivi mobili in orientamento orizzontale */
+@media screen and (max-height: 600px) and (orientation: landscape) {
+  /* Stili generali */
+  body {
+    font-size: 14px;
+  }
+
+  /* Header e navigazione */
+  .game-header {
+    padding: 0.5rem;
+  }
+
+  .game-header h1 {
+    font-size: 1.5rem;
+  }
+
+  /* Area di gioco */
+  .game-table {
+    height: calc(100vh - 120px);
+    padding: 0.5rem;
+  }
+
+  .player-hand {
+    height: 120px;
+    padding: 0.5rem;
+  }
+
+  .card {
+    width: 60px;
+    height: 90px;
+    margin: 0 2px;
+  }
+
+  /* Area informazioni */
+  .game-info {
+    padding: 0.5rem;
+  }
+
+  .score-board {
+    font-size: 0.9rem;
+  }
+
+  /* Area chat e messaggi */
+  .game-messages {
+    height: 100px;
+    padding: 0.5rem;
+  }
+
+  .message {
+    font-size: 0.8rem;
+    padding: 0.3rem;
+  }
+
+  /* Bottoni e controlli */
+  .game-controls {
+    padding: 0.5rem;
+  }
+
+  .game-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  /* Modalità di selezione */
+  .game-mode-selection {
+    padding: 1rem;
+  }
+
+  .mode-buttons {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .mode-buttons button {
+    padding: 1rem;
+  }
+
+  /* Leaderboard */
+  .leaderboard-container {
+    padding: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .stat-item {
+    padding: 0.8rem;
+  }
+
+  .stat-value {
+    font-size: 1.2rem;
+  }
+
+  /* Autenticazione */
+  .auth-box {
+    padding: 1rem;
+    max-width: 90%;
+  }
+
+  .form-group input {
+    padding: 0.6rem;
+  }
+
+  /* Animazioni */
+  .card-played {
+    transform: scale(0.8);
+  }
+
+  /* Ottimizzazioni per il touch */
+  .card {
+    touch-action: manipulation;
+  }
+
+  .game-button {
+    min-height: 44px; /* Dimensione minima per il touch */
+  }
+
+  /* Layout specifico per mobile */
+  .game-layout {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .player-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+  }
+
+  .opponent-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+  }
+
+  .center-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+  }
+
+  /* Ottimizzazioni per la performance */
+  .card {
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  /* Gestione dello zoom */
+  @media (max-resolution: 150dpi) {
+    .card {
+      transform: scale(0.9);
+    }
+  }
+}
+
+/* Prevenzione del ridimensionamento automatico su iOS */
+@supports (-webkit-touch-callout: none) {
+  .game-layout {
+    height: -webkit-fill-available;
+  }
+} 

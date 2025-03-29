@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Hearts Game - Un gioco di carte multiplayer"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>Hearts Game</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+          Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: #1a1a1a;
+        color: white;
+      }
+
+      #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .loading-text {
+        margin-top: 20px;
+        font-size: 1.2em;
+        color: #ffffff;
+      }
+
+      .error-message {
+        color: #ff4444;
+        text-align: center;
+        padding: 20px;
+        background-color: rgba(255, 68, 68, 0.1);
+        border-radius: 5px;
+        margin: 20px;
+      }
+
+      .game-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .game-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .game-title {
+        font-size: 2.5em;
+        color: #ffffff;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .game-subtitle {
+        font-size: 1.2em;
+        color: #cccccc;
+      }
+
+      .game-status {
+        text-align: center;
+        margin: 20px 0;
+        padding: 10px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+      }
+
+      .game-status.active {
+        background-color: rgba(76, 175, 80, 0.2);
+      }
+
+      .game-status.waiting {
+        background-color: rgba(255, 152, 0, 0.2);
+      }
+
+      .game-status.error {
+        background-color: rgba(244, 67, 54, 0.2);
+      }
+
+      .game-controls {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 20px 0;
+      }
+
+      .game-button {
+        padding: 10px 20px;
+        font-size: 1em;
+        border: none;
+        border-radius: 5px;
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .game-button:hover {
+        background-color: #45a049;
+      }
+
+      .game-button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+
+      .game-input {
+        padding: 10px;
+        font-size: 1em;
+        border: none;
+        border-radius: 5px;
+        background-color: #333333;
+        color: white;
+        width: 200px;
+      }
+
+      .game-input:focus {
+        outline: none;
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+      }
+
+      .game-card {
+        width: 60px;
+        height: 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.2em;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s;
+        user-select: none;
+      }
+
+      .game-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .game-card.red {
+        color: #ff0000;
+      }
+
+      .game-card.black {
+        color: #000000;
+      }
+
+      .game-card.selected {
+        transform: translateY(-10px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .game-card.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .game-player {
+        padding: 20px;
+        background-color: #2a2a2a;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        margin: 10px 0;
+      }
+
+      .game-player.active {
+        border: 2px solid #4CAF50;
+      }
+
+      .game-player.current {
+        border: 2px solid #2196F3;
+      }
+
+      .game-player-name {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        color: #ffffff;
+      }
+
+      .game-player-hand {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        justify-content: center;
+      }
+
+      .game-mano {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 20px 0;
+      }
+
+      .game-mano-card {
+        transform: scale(0.8);
+      }
+
+      .game-scores {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+        margin: 20px 0;
+      }
+
+      .game-score-item {
+        padding: 10px;
+        background-color: #2a2a2a;
+        border-radius: 5px;
+        text-align: center;
+      }
+
+      .game-score-name {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .game-score-value {
+        font-size: 1.2em;
+        color: #4CAF50;
+      }
+
+      .game-over {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.9);
+        padding: 30px;
+        border-radius: 10px;
+        text-align: center;
+        z-index: 1000;
+      }
+
+      .game-over-title {
+        font-size: 2em;
+        margin-bottom: 20px;
+        color: #4CAF50;
+      }
+
+      .game-over-scores {
+        margin: 20px 0;
+      }
+
+      .game-over-button {
+        padding: 10px 20px;
+        font-size: 1.2em;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .game-over-button:hover {
+        background-color: #45a049;
+      }
+
+      @media (max-width: 768px) {
+        .game-container {
+          padding: 10px;
+        }
+
+        .game-title {
+          font-size: 2em;
+        }
+
+        .game-card {
+          width: 50px;
+          height: 75px;
+          font-size: 1em;
+        }
+
+        .game-player {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>Devi abilitare JavaScript per giocare a questo gioco.</noscript>
+    <div id="root">
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Caricamento del gioco...</div>
+      </div>
+    </div>
+  </body>
+</html> 
